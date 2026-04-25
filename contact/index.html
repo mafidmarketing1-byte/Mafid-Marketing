@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact — Mafid Marketing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --orange: #FF6B00;
+      --blue: #0057FF;
+      --white: #ffffff;
+      --dark: #0a0a0a;
+      --nav-height: 80px;
+    }
+
+    html, body {
+      font-family: 'Manrope', sans-serif;
+      background: var(--dark);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* Width constraint */
+    .w {
+      padding-left: max(60px, calc((100% - 1100px) / 2));
+      padding-right: max(60px, calc((100% - 1100px) / 2));
+    }
+
+
+    /* =============================================
+       HEADER
+    ============================================= */
+    header {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: var(--nav-height);
+      z-index: 9000;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 0 40px;
+      background: rgba(10,10,10,1.0);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      transition: background 0.4s ease;
+    }
+
+    nav { display: flex; gap: 32px; align-items: center; }
+
+    nav a {
+      text-decoration: none;
+      color: rgba(255,255,255,0.75);
+      font-size: 0.85rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      transition: color 0.25s ease;
+      position: relative;
+    }
+
+    nav a::after {
+      content: ''; position: absolute;
+      bottom: -3px; left: 0;
+      width: 0%; height: 1.5px;
+      background: linear-gradient(90deg, var(--orange), var(--blue));
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover { color: var(--white); }
+    nav a:hover::after { width: 100%; }
+    nav a.active { color: var(--white); }
+    nav a.active::after { width: 100%; }
+
+    .brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.75rem; letter-spacing: 0.1em;
+      text-align: center; color: var(--white);
+      white-space: nowrap; text-decoration: none;
+    }
+
+    .header-right { display: flex; justify-content: flex-end; }
+
+    .cta-btn {
+      text-decoration: none;
+      padding: 10px 24px; border-radius: 6px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--white);
+      background: linear-gradient(90deg, var(--orange), var(--blue), var(--orange));
+      background-size: 200% 100%; background-position: 0% 50%;
+      transition: background-position 0.6s ease, box-shadow 0.4s ease;
+      box-shadow: 0 0 16px rgba(255,107,0,0.3);
+      border: none; cursor: pointer;
+    }
+
+    .cta-btn:hover { background-position: 100% 50%; box-shadow: 0 0 24px rgba(0,87,255,0.45); }
+
+    /* Dropdown */
+    .nav-dropdown { position: relative; display: flex; align-items: center; }
+    .nav-dropdown > a { display: flex; align-items: center; gap: 5px; }
+    .nav-dropdown > span {
+        color: rgba(255,255,255,0.75);
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        cursor: default;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .nav-dropdown > a::before,
+    .nav-dropdown > span::before {
+        content: ''; display: inline-block;
+        width: 6px; height: 6px;
+        border-right: 1.5px solid currentColor;
+        border-bottom: 1.5px solid currentColor;
+        transform: rotate(45deg) translateY(-2px);
+        transition: transform 0.25s ease;
+        order: 2; margin-left: 2px;
+    }
+    .nav-dropdown:hover > a::before,
+    .nav-dropdown:hover > span::before { transform: rotate(-135deg) translateY(-2px); }
+    .nav-dropdown > a::after { display: none; }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%; left: 50%;
+      padding-top: 12px;
+      background: transparent;
+      min-width: 220px;
+      opacity: 0; pointer-events: none;
+      transform: translateX(-50%) translateY(-4px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      z-index: 9999;
+    }
+
+    .dropdown-inner {
+      background: rgba(13,13,18,0.98);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid #1e1e2e; border-radius: 12px;
+      padding: 8px; position: relative;
+    }
+
+    .dropdown-inner::before {
+      content: ''; position: absolute;
+      top: -5px; left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+      width: 8px; height: 8px;
+      background: #1e1e2e;
+      border-left: 1px solid #1e1e2e;
+      border-top: 1px solid #1e1e2e;
+    }
+
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown:focus-within .dropdown-menu {
+      opacity: 1; pointer-events: all;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .dropdown-menu a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 8px;
+      text-decoration: none;
+      color: rgba(255,255,255,0.65) !important;
+      font-size: 0.78rem !important; font-weight: 600 !important;
+      letter-spacing: 0.08em !important; text-transform: uppercase !important;
+      transition: background 0.2s ease, color 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .dropdown-menu a::after { display: none !important; }
+    .dropdown-menu a:hover { background: rgba(255,255,255,0.05); color: var(--white) !important; }
+
+    .drop-icon {
+      width: 28px; height: 28px; border-radius: 7px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    .drop-icon-o { background: rgba(255,107,0,0.1); }
+    .drop-icon-b { background: rgba(0,87,255,0.1); }
+    .drop-divider { height: 1px; background: #1e1e2e; margin: 4px 8px; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none; flex-direction: column;
+      justify-content: center; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px; z-index: 200;
+    }
+    .hamburger span {
+      display: block; width: 24px; height: 2px;
+      background: var(--white); border-radius: 2px;
+      transition: transform 0.35s ease, opacity 0.35s ease;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile menu */
+    .mobile-menu {
+      display: none; position: fixed;
+      top: var(--nav-height); left: 0;
+      width: 100%; height: calc(100vh - var(--nav-height));
+      background: rgba(10,10,10,0.98);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 40px; z-index: 99;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    }
+    .mobile-menu.open { opacity: 1; pointer-events: all; }
+    .mobile-menu a.mobile-nav-link {
+      text-decoration: none; color: rgba(255,255,255,0.8);
+      font-size: 1.6rem; font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.15em; transition: color 0.2s ease;
+    }
+    .mobile-menu a.mobile-nav-link:hover { color: var(--white); }
+    .mobile-menu .cta-btn { font-size: 0.9rem; padding: 14px 36px; }
+
+
+    /* =============================================
+       CONTACT HERO
+    ============================================= */
+    .ct-hero {
+      padding-top: calc(var(--nav-height) + 90px);
+      padding-bottom: 90px;
+      background: var(--dark);
+      position: relative; overflow: hidden;
+      border-bottom: 1px solid #141420;
+    }
+
+    /* Subtle grid overlay */
+    .ct-hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,107,0,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,107,0,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(ellipse at 20% 50%, black 30%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse at 20% 50%, black 30%, transparent 75%);
+      pointer-events: none;
+    }
+
+    .ct-glow1 {
+      position: absolute;
+      width: 420px; height: 420px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,107,0,0.08) 0%, transparent 65%);
+      top: -100px; right: -60px; pointer-events: none;
+    }
+
+    .ct-glow2 {
+      position: absolute;
+      width: 320px; height: 320px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,87,255,0.06) 0%, transparent 65%);
+      bottom: -80px; left: 35%; pointer-events: none;
+    }
+
+    .ct-hero-inner { position: relative; z-index: 1; }
+
+    .ct-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--orange); margin-bottom: 22px;
+    }
+
+    .ct-eyebrow::before {
+      content: ''; width: 28px; height: 1px;
+      background: linear-gradient(90deg, var(--orange), transparent); display: block;
+    }
+
+    .ct-hero-heading {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(42px, 7vw, 80px);
+      font-weight: 800; line-height: 0.92;
+      letter-spacing: -2px; margin-bottom: 28px;
+    }
+
+    .line-w { display: block; color: var(--white); }
+    .line-o { display: block; color: transparent; -webkit-text-stroke: 1.5px var(--orange); }
+    .line-grad {
+      display: block;
+      background: linear-gradient(90deg, var(--orange) 0%, var(--blue) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 100% 100%;
+      width: fit-content;
+    }
+
+    .ct-hero-sub {
+      font-size: 15px; font-weight: 300;
+      color: #555566; max-width: 460px; line-height: 1.8;
+    }
+
+    .ct-hero-sub strong { color: var(--orange); font-weight: 500; }
+
+
+    /* =============================================
+       BODY: FORM + INFO SPLIT
+    ============================================= */
+    .ct-body {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      background: #0d0d0f;
+      border-bottom: 1px solid #141420;
+      max-width: 1220px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Full-bleed wrapper */
+    .ct-body-wrap {
+      background: #0d0d0f;
+      border-bottom: 1px solid #141420;
+    }
+
+
+    /* ── FORM SIDE ── */
+    .ct-form-side {
+      padding: 72px 56px;
+      border-right: 1px solid #141420;
+    }
+
+    .ct-section-label {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: #333344; margin-bottom: 32px;
+    }
+
+    .ct-form { display: flex; flex-direction: column; gap: 24px; }
+
+    .ct-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .ct-field { display: flex; flex-direction: column; gap: 8px; }
+
+    .ct-field label {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: #444455;
+    }
+
+    .ct-field input,
+    .ct-field textarea,
+    .ct-field select {
+      background: #111118;
+      border: 1px solid #1e1e2e;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 14px; font-weight: 300;
+      font-family: 'Manrope', sans-serif;
+      color: #ccccd8;
+      outline: none;
+      transition: border-color 0.25s, background 0.25s;
+      width: 100%; resize: none;
+    }
+
+    .ct-field input::placeholder,
+    .ct-field textarea::placeholder { color: #2a2a3a; }
+
+    .ct-field input:focus,
+    .ct-field textarea:focus,
+    .ct-field select:focus {
+      border-color: rgba(255,107,0,0.4);
+      background: #13131a;
+    }
+
+    .ct-field select {
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 7L11 1' stroke='%23444455' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      cursor: pointer;
+    }
+
+    .ct-field select option { background: #111118; color: #ccccd8; }
+    .ct-field textarea { min-height: 130px; line-height: 1.7; }
+
+    /* Service pills */
+    .ct-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .ct-pill {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.8px; text-transform: uppercase;
+      padding: 7px 15px; border-radius: 100px;
+      border: 1px solid #1e1e2e;
+      background: transparent; color: #333344;
+      cursor: pointer; font-family: 'Manrope', sans-serif;
+      transition: all 0.15s;
+    }
+
+    .ct-pill:hover { border-color: #2a2a3a; color: #666677; }
+    .ct-pill.on-o { background: rgba(255,107,0,0.1); border-color: rgba(255,107,0,0.3); color: var(--orange); }
+    .ct-pill.on-b { background: rgba(0,87,255,0.1); border-color: rgba(0,87,255,0.3); color: var(--blue); }
+
+    /* Submit row */
+    .ct-submit {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 16px; margin-top: 4px;
+    }
+
+    .ct-submit-note { font-size: 12px; font-weight: 300; color: #333344; line-height: 1.6; }
+    .ct-submit-note b { color: #555566; font-weight: 500; }
+
+    .ct-btn {
+      font-family: 'Manrope', sans-serif;
+      font-size: 13px; font-weight: 700;
+      padding: 14px 28px; border-radius: 8px; border: none;
+      color: var(--white);
+      background: linear-gradient(90deg, var(--orange), var(--blue), var(--orange));
+      background-size: 200% 100%; background-position: 0% 50%;
+      transition: background-position 0.6s ease, box-shadow 0.3s ease;
+      cursor: pointer; white-space: nowrap;
+      display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+      box-shadow: 0 0 16px rgba(255,107,0,0.2);
+    }
+
+    .ct-btn:hover { background-position: 100% 50%; box-shadow: 0 0 24px rgba(0,87,255,0.35); }
+
+
+    /* ── INFO SIDE ── */
+    .ct-info {
+      padding: 72px 40px;
+      background: #0a0a0c;
+      display: flex; flex-direction: column; gap: 0;
+    }
+
+    .ct-info-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px; font-weight: 800;
+      color: var(--white); margin-bottom: 28px;
+    }
+
+    .ct-detail {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 18px 0; border-bottom: 1px solid #141420;
+    }
+
+    .ct-detail:last-of-type { border-bottom: none; }
+
+    .ct-d-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+
+    .ct-d-label {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: #333344; margin-bottom: 5px;
+    }
+
+    .ct-d-value { font-size: 13px; font-weight: 300; color: #666677; line-height: 1.55; }
+    .ct-d-value b { color: #ccccd8; font-weight: 500; }
+
+    /* Response badge */
+    .ct-badge {
+      margin-top: 28px;
+      background: #111118; border: 1px solid #1e1e2e;
+      border-radius: 12px; padding: 18px 20px;
+      position: relative; overflow: hidden;
+    }
+
+    .ct-badge::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--orange), transparent);
+      opacity: 0.4;
+    }
+
+    .ct-badge-top { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+
+    .ct-badge-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #32c864;
+      animation: pulse-green 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-green {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(50,200,100,0.5); }
+      50%       { box-shadow: 0 0 0 5px rgba(50,200,100,0); }
+    }
+
+    .ct-badge-label {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase; color: #32c864;
+    }
+
+    .ct-badge-text { font-size: 13px; font-weight: 300; color: #444455; line-height: 1.65; }
+    .ct-badge-text b { color: #888899; font-weight: 400; }
+
+    /* Socials */
+    .ct-socials { margin-top: 24px; }
+
+    .ct-soc {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 13px 0; border-bottom: 1px solid #141420;
+      cursor: pointer; text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .ct-soc:last-child { border-bottom: none; }
+    .ct-soc:hover { opacity: 0.75; }
+
+    .ct-soc-left { display: flex; align-items: center; gap: 12px; }
+
+    .ct-soc-icon {
+      width: 34px; height: 34px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .ct-soc-name { font-size: 13px; font-weight: 500; color: #888899; display: block; }
+    .ct-soc-handle { font-size: 11px; font-weight: 300; color: #333344; display: block; }
+
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      background: #080808; border-top: 1px solid #1a1a24;
+      padding: 36px max(60px, calc((100% - 1100px) / 2));
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    }
+
+    .footer-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem; letter-spacing: 0.1em;
+      color: var(--white); text-decoration: none;
+    }
+
+    .footer-links { display: flex; gap: 24px; }
+
+    .footer-links a {
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: #444455; text-decoration: none; transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--white); }
+    .footer-copy { font-size: 12px; color: #2a2a3a; }
+    .footer-links .nav-dropdown > span {
+        color: #444455;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: default;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: color 0.2s;
+    }
+
+    .footer-links .nav-dropdown:hover > span {
+        color: var(--white);
+    }
+
+    .footer-links .nav-dropdown .dropdown-menu {
+        top: auto;
+        bottom: 100%;
+        padding-top: 0;
+        padding-bottom: 16px;
+        transform: translateX(-50%) translateY(6px);
+    }
+
+    .footer-links .nav-dropdown:hover .dropdown-menu {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    .footer-links .nav-dropdown .dropdown-inner::before {
+        top: auto;
+        bottom: -5px;
+        border-left: none;
+        border-top: none;
+        border-right: 1px solid #1e1e2e;
+        border-bottom: 1px solid #1e1e2e;
+    }
+
+    /* =============================================
+       FADE-IN
+    ============================================= */
+    .fade-in {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .fade-in[data-delay="1"] { transition-delay: 0.10s; }
+    .fade-in[data-delay="2"] { transition-delay: 0.20s; }
+    .fade-in[data-delay="3"] { transition-delay: 0.30s; }
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in { opacity: 1; transform: none; transition: none; }
+    }
+
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 1024px) {
+      header { padding: 0 24px; }
+      nav { gap: 20px; }
+      nav a { font-size: 0.78rem; }
+      .brand { font-size: 1.4rem; }
+      .cta-btn { font-size: 0.72rem; padding: 9px 18px; }
+      .ct-hero { padding-left: 40px; padding-right: 40px; }
+      footer { padding-left: 40px; padding-right: 40px; }
+      .ct-form-side { padding: 56px 40px; }
+      .ct-info { padding: 56px 32px; }
+    }
+
+    @media (max-width: 768px) {
+      :root { --nav-height: 64px; }
+      header { grid-template-columns: auto 1fr auto; padding: 0 20px; }
+      nav, .header-right { display: none; }
+      .brand { font-size: 1.3rem; text-align: center; }
+      .hamburger { display: flex; }
+      .mobile-menu { display: flex; }
+
+      .ct-hero { padding-left: 20px; padding-right: 20px; padding-top: calc(var(--nav-height) + 56px); padding-bottom: 60px; }
+      .ct-hero-heading { letter-spacing: -1px; }
+      .ct-body { grid-template-columns: 1fr; }
+      .ct-form-side { padding: 48px 20px; border-right: none; border-bottom: 1px solid #141420; }
+      .ct-info { padding: 48px 20px; }
+      .ct-row { grid-template-columns: 1fr; }
+      .ct-submit { flex-direction: column; align-items: flex-start; }
+      .ct-btn { width: 100%; justify-content: center; }
+      footer { padding: 32px 20px; flex-direction: column; align-items: flex-start; gap: 12px; }
+      .footer-links { flex-wrap: wrap; gap: 16px; }
+    }
+
+    @media (max-width: 420px) {
+      .ct-hero { padding-left: 16px; padding-right: 16px; }
+      .ct-form-side { padding: 40px 16px; }
+      .ct-info { padding: 40px 16px; }
+      footer { padding-left: 16px; padding-right: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+   </button>
+
+   <nav>
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <div class="nav-dropdown">
+        <span>Services</span>
+        <div class="dropdown-menu">
+         <div class="dropdown-inner">
+           <a href="/services/web-development/">
+              <div class="drop-icon drop-icon-o"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF6B00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+              Website Development
+            </a>
+            <div class="drop-divider"></div>
+            <a href="/services/logo-branding/">
+              <div class="drop-icon drop-icon-b"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0057FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+             Logo &amp; Branding
+            </a>
+            <div class="drop-divider"></div>
+            <a href="/services/seo-growth/">
+              <div class="drop-icon drop-icon-o"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF6B00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+              SEO &amp; Growth
+            </a>
+         </div>
+       </div>
+     </div>
+      <a href="/contact/" class="active">Contact</a>
+   </nav>
+
+   <a href="/" class="brand">Mafid Marketing</a>
+
+   <div class="header-right">
+      <a href="/contact/" class="cta-btn">Get Started</a>
+   </div>
+  </header>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/about/" class="mobile-nav-link">About</a>
+    <a href="/services/" class="mobile-nav-link">Services</a>
+    <div style="display:flex; flex-direction:column; gap:12px; align-items:center;">
+     <a href="/services/web-development/" style="text-decoration:none; color:rgba(255,255,255,0.5); font-size:0.85rem; font-family:'Manrope',sans-serif; font-weight:600; letter-spacing:0.1em; text-transform:uppercase;">Website Development</a>
+     <a href="/services/logo-branding/" style="text-decoration:none; color:rgba(255,255,255,0.5); font-size:0.85rem; font-family:'Manrope',sans-serif; font-weight:600; letter-spacing:0.1em; text-transform:uppercase;">Logo &amp; Branding</a>
+     <a href="/services/seo-growth/" style="text-decoration:none; color:rgba(255,255,255,0.5); font-size:0.85rem; font-family:'Manrope',sans-serif; font-weight:600; letter-spacing:0.1em; text-transform:uppercase;">SEO &amp; Growth</a>
+   </div>
+   <a href="/contact/" class="mobile-nav-link">Contact</a>
+   <a href="/contact/" class="cta-btn">Get Started</a>
+  </div>
+
+
+  <!-- =============================================
+       HERO
+  ============================================= -->
+  <section class="ct-hero w">
+    <div class="ct-hero-grid"></div>
+    <div class="ct-glow1"></div>
+    <div class="ct-glow2"></div>
+    <div class="ct-hero-inner">
+      <div class="ct-eyebrow fade-in">Get In Touch</div>
+      <h1 class="ct-hero-heading fade-in" data-delay="1">
+        <span class="line-w">Let's Build</span>
+        <span class="line-o">Something</span>
+        <span class="line-grad">Great.</span>
+      </h1>
+      <p class="ct-hero-sub fade-in" data-delay="2">
+        Tell us about your project and we'll get back to you within <strong>24 hours</strong> with a tailored strategy — no fluff, no obligation.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       BODY: FORM + INFO
+  ============================================= -->
+  <div class="ct-body-wrap">
+    <div class="ct-body">
+
+      <!-- FORM -->
+      <div class="ct-form-side fade-in">
+        <p class="ct-section-label">Send Us A Message</p>
+        <div class="ct-form">
+
+          <div class="ct-row">
+            <div class="ct-field">
+              <label>First Name</label>
+              <input type="text" placeholder="John"/>
+            </div>
+            <div class="ct-field">
+              <label>Last Name</label>
+              <input type="text" placeholder="Smith"/>
+            </div>
+          </div>
+
+          <div class="ct-field">
+            <label>Email Address</label>
+            <input type="email" placeholder="john@yourbusiness.com"/>
+          </div>
+
+          <div class="ct-field">
+            <label>Phone Number</label>
+            <input type="tel" placeholder="+61 4XX XXX XXX"/>
+          </div>
+
+          <div class="ct-field">
+            <label>Business Name</label>
+            <input type="text" placeholder="Your Business Pty Ltd"/>
+          </div>
+
+          <div class="ct-field">
+            <label>What Are You Looking For?</label>
+            <div class="ct-pills">
+              <button class="ct-pill on-o" onclick="togglePill(this)">Website Dev</button>
+              <button class="ct-pill" onclick="togglePill(this)">Logo &amp; Branding</button>
+              <button class="ct-pill" onclick="togglePill(this)">SEO &amp; Growth</button>
+              <button class="ct-pill on-b" onclick="togglePill(this)">Full Package</button>
+              <button class="ct-pill" onclick="togglePill(this)">Not Sure Yet</button>
+            </div>
+          </div>
+
+          <div class="ct-field">
+            <label>Budget Range</label>
+            <select>
+              <option value="" disabled selected>Select your budget range</option>
+              <option>Under $1,000</option>
+              <option>$1,000 – $3,000</option>
+              <option>$3,000 – $7,000</option>
+              <option>$7,000 – $15,000</option>
+              <option>$15,000+</option>
+            </select>
+          </div>
+
+          <div class="ct-field">
+            <label>Tell Us About Your Project</label>
+            <textarea placeholder="Give us a brief overview — what does your business do, what's the goal, and what's holding you back right now?"></textarea>
+          </div>
+
+          <div class="ct-submit">
+            <p class="ct-submit-note"><b>No spam, ever.</b><br/>We'll reply within 24 hours with a real response.</p>
+            <button class="ct-btn">
+              Send Message
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- INFO -->
+      <div class="ct-info fade-in" data-delay="1">
+        <h2 class="ct-info-title">Contact Info</h2>
+
+        <div class="ct-detail">
+          <div class="ct-d-icon" style="background:rgba(255,107,0,0.08);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF6B00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <p class="ct-d-label">Email</p>
+            <p class="ct-d-value"><b>hello@mafidmarketing.com</b></p>
+          </div>
+        </div>
+
+        <div class="ct-detail">
+          <div class="ct-d-icon" style="background:rgba(0,87,255,0.08);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0057FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <p class="ct-d-label">Based In</p>
+            <p class="ct-d-value"><b>Melbourne, VIC</b><br/>Serving clients Australia-wide</p>
+          </div>
+        </div>
+
+        <div class="ct-detail">
+          <div class="ct-d-icon" style="background:rgba(255,107,0,0.08);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF6B00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <p class="ct-d-label">Working Hours</p>
+            <p class="ct-d-value"><b>Mon – Fri, 9am – 6pm AEST</b></p>
+          </div>
+        </div>
+
+        <div class="ct-badge">
+          <div class="ct-badge-top">
+            <div class="ct-badge-dot"></div>
+            <span class="ct-badge-label">Currently Accepting Clients</span>
+          </div>
+          <p class="ct-badge-text">We typically respond within <b>24 hours</b>. For urgent enquiries, mention "Urgent" in your message.</p>
+        </div>
+
+        <div class="ct-socials">
+          <a class="ct-soc" href="#">
+            <div class="ct-soc-left">
+              <div class="ct-soc-icon" style="background:rgba(255,107,0,0.08);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF6B00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+              </div>
+              <div>
+                <span class="ct-soc-name">LinkedIn</span>
+                <span class="ct-soc-handle">Mafid Marketing</span>
+              </div>
+            </div>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#333344" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <a class="ct-soc" href="#">
+            <div class="ct-soc-left">
+              <div class="ct-soc-icon" style="background:rgba(0,87,255,0.08);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0057FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              </div>
+              <div>
+                <span class="ct-soc-name">Instagram</span>
+                <span class="ct-soc-handle">@mafidmarketing</span>
+              </div>
+            </div>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#333344" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- =============================================
+       FOOTER
+  ============================================= -->
+  <footer>
+    <a href="/" class="footer-brand">Mafid Marketing</a>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <div class="nav-dropdown">
+        <span>Services</span>
+        <div class="dropdown-menu">
+         <div class="dropdown-inner">
+            <a href="/services/web-development/">
+              <div class="drop-icon drop-icon-o"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF6B00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+              Website Development
+           </a>
+            <div class="drop-divider"></div>
+           <a href="/services/logo-branding/">
+             <div class="drop-icon drop-icon-b"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0057FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+              Logo &amp; Branding
+          </a>
+            <div class="drop-divider"></div>
+           <a href="/services/seo-growth/">
+              <div class="drop-icon drop-icon-o"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF6B00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+              SEO &amp; Growth
+            </a>
+          </div>
+        </div>
+    </div>
+      <a href="/contact/">Contact</a>
+   </div>
+   <span class="footer-copy">© 2025 Mafid Marketing. All rights reserved.</span>
+  </footer>
+
+
+  <!-- =============================================
+       JAVASCRIPT
+  ============================================= -->
+  <script>
+    // Header scroll opacity
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => {
+      header.style.background = window.scrollY > 10
+        ? 'rgba(10,10,10,0.75)'
+        : 'rgba(10,10,10,1.0)';
+    });
+
+    // Hamburger
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        hamburger.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // Scroll fade-in
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.10, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Pill toggle
+    let count = 0;
+    function togglePill(btn) {
+      if (btn.classList.contains('on-o') || btn.classList.contains('on-b')) {
+        btn.classList.remove('on-o', 'on-b');
+      } else {
+        count++;
+        btn.classList.add(count % 2 === 0 ? 'on-b' : 'on-o');
+      }
+    }
+  </script>
+</body>
+</html>
